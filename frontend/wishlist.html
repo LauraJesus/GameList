@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameList — Lista de desejos</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header>
+    <h2>GameList</h2>
+    <nav>
+      <a href="jogos.html">Explorar</a> | 
+      <a href="wishlist.html">
+        Lista de desejos (<span id="nav-badge" hidden>0</span>)
+      </a>
+    </nav>
+    <div>
+      Usuário logado: <span id="nav-username">—</span>
+      <button onclick="logout()">Sair</button>
+    </div>
+  </header>
+
+  <hr />
+
+  <section>
+    <h1>Sua Lista de Desejos</h1>
+    <p id="wishlist-count-label">Carregando...</p>
+
+    <div id="wishlist-filters" hidden>
+      <label for="wl-search">Filtrar:</label>
+      <input 
+        type="search" 
+        id="wl-search" 
+        placeholder="Buscar na lista..." 
+        oninput="filtraLista(this.value)" 
+      />
+
+      <label for="wl-sort">Ordenar por:</label>
+      <select id="wl-sort" onchange="ordenaLista(this.value)">
+        <option value="added_desc">Adicionados recentemente</option>
+        <option value="added_asc">Adicionados primeiro</option>
+        <option value="name_asc">Nome A–Z</option>
+        <option value="name_desc">Nome Z–A</option>
+        <option value="rating_desc">Melhor avaliados</option>
+        <option value="status">Por status</option>
+      </select>
+
+      <label for="wl-status-filter">Status:</label>
+      <select id="wl-status-filter" onchange="filtraPorStatus(this.value)">
+        <option value="">Todos os status</option>
+        <option value="want">Quero jogar</option>
+        <option value="playing">Jogando</option>
+        <option value="done">Zerado</option>
+        <option value="dropped">Abandonado</option>
+      </select>
+    </div>
+  </section>
+
+  <hr />
+
+  <main>
+    <div id="wl-empty" hidden>
+      <p>Sua lista está vazia. Explore jogos e adicione os que quiser jogar.</p>
+      <a href="jogos.html">Explorar jogos</a>
+    </div>
+
+    <div id="wl-grid" hidden></div>
+  </main>
+
+  <div id="edit-modal" hidden>
+    <hr />
+    <div>
+      <button onclick="closeEditModal()">Fechar Edição [X]</button>
+
+      <div>
+        <p>Editando:</p>
+        <h2 id="edit-modal-title"></h2>
+        <img id="edit-img" src="" alt="Capa do Jogo" width="150" />
+      </div>
+
+      <div>
+        <label for="edit-status">Status:</label>
+        <select id="edit-status">
+          <option value="want">Quero jogar</option>
+          <option value="playing">Jogando agora</option>
+          <option value="done">Zerado</option>
+          <option value="dropped">Abandonado</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="edit-note">Anotação pessoal:</label><br/>
+        <textarea id="edit-note" placeholder="Ex: comprar na promoção, jogar com o amigo..." rows="3" maxlength="300"></textarea>
+        <div><span id="edit-note-count">0</span>/300</div>
+      </div>
+
+      <div>
+        <label>Sua avaliação:</label>
+        <div id="star-row">
+          <button type="button" data-val="1" onclick="setStars(1)">1 Estrela</button>
+          <button type="button" data-val="2" onclick="setStars(2)">2 Estrelas</button>
+          <button type="button" data-val="3" onclick="setStars(3)">3 Estrelas</button>
+          <button type="button" data-val="4" onclick="setStars(4)">4 Estrelas</button>
+          <button type="button" data-val="5" onclick="setStars(5)">5 Estrelas</button>
+        </div>
+      </div>
+
+      <div id="msg-edit"></div>
+
+      <div>
+        <button onclick="saveEdit()">Salvar alterações</button>
+        <button onclick="confirmDelete()">Remover da lista</button>
+      </div>
+    </div>
+    <hr />
+  </div>
+
+  <div id="delete-modal" hidden>
+    <div>
+      <h2>Remover jogo?</h2>
+      <p id="delete-game-name"></p>
+      <button onclick="deletaLista()">Sim, remover</button>
+      <button onclick="closeDeleteModal()">Cancelar</button>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/wishlist.js"></script>
+</body>
+</html>
