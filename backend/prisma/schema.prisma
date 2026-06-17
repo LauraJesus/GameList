@@ -1,0 +1,59 @@
+// O Prisma é o ORM que usamos para conversar com o banco de dados.
+// ORM = a gente escreve TypeScript, e ele converte para SQL automaticamente.
+// Aqui definimos os "modelos", que são as tabelas do banco.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Usamos SQLite porque é simples: é apenas um arquivo .db na pasta prisma/.
+// Não precisa instalar nada extra (como PostgreSQL ou MySQL).
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Tabela de usuários
+model Usuario {
+  id        Int      @id @default(autoincrement()) // chave primária, número que cresce sozinho
+  nome      String
+  email     String   @unique // @unique = o Prisma não deixa dois usuários com o mesmo e-mail
+  senha     String           // aqui ficará o hash da senha, nunca a senha pura
+  criadoEm DateTime @default(now())
+
+  // Relações: um usuário pode ter vários itens na lista de desejos e várias avaliações
+  listaDesejos  Wishlist[]
+  avaliacoes    Review[]
+}
+
+// Tabela da lista de desejos
+// Guardamos os dados básicos do jogo aqui para não precisar chamar a RAWG toda hora
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  usuarioId Int      // chave estrangeira: aponta para qual usuário é dono desse item
+  jogoId    Int      // ID do jogo na API da RAWG
+  jogoNome  String
+  jogoImagem String
+
+  criadoEm DateTime @default(now())
+
+  // Aqui dizemos ao Prisma: usuarioId aponta para o campo id do modelo Usuario
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  @@unique([usuarioId, jogoId])
+}
+
+// Tabela de avaliações — esse é o CRUD principal do projeto
+model Review {
+  id        Int      @id @default(autoincrement())
+  usuarioId Int
+  jogoId    Int
+  jogoNome  String
+  nota      Float    // nota de 0 a 10
+  comentario String?
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt // atualiza automaticamente quando o registro muda
+
+  usuario  Usuario  @relation(fields: [usuarioId], references: [id])
+  @@unique([usuarioId, jogoId]) //comentario unico 
+}
