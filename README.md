@@ -6,4 +6,4 @@ Aplicação web para explorar jogos por gênero e gerenciar lista de desejos.
 - Backend: Node.js + Express
 - Auth: JSON Web Tokens (JWT)
 - API externa: RAWG (rawg.io)
-- Dados: arquivos JSON
+- Dados: Prisma (ORM) + SQLite/PostgreSQL
