@@ -55,14 +55,16 @@ export class AuthService {
         
         const token = jwt.sign( //cria token
             {
-            id: usuarioExists.id
+                id: usuarioExists.id,
+                email: usuarioExists.email,
+                nome: usuarioExists.nome,
             },
             process.env.JWT_SECRET!,
             {
                 expiresIn: "1d" // tempo de expiração do token
             }
         );
-        return { token, };
+        return { token, usuario: { id: usuarioExists.id, nome: usuarioExists.nome, email: usuarioExists.email } };
     }
 
 }

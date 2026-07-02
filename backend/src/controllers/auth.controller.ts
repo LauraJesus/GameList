@@ -39,6 +39,7 @@ export class AuthController {
 
             res.json({
                 success: true,
+                usuario: resposta.usuario,
             });
         }catch(error){
             res.status(400).json({
