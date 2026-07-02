@@ -1,0 +1,31 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #27272a;
+}
+
+.header nav ul,
+.header > div ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.header a {
+  color: #f4f4f5;
+}
+
+.header a:hover {
+  color: #a78bfa;
+}
+
+.header button {
+  background: transparent;
+  border: 1px solid #3f3f46;
+  color: #f4f4f5;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
