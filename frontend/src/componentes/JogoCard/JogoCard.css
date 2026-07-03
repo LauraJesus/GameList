@@ -1,0 +1,55 @@
+.jogo-card {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.jogo-card:hover {
+  border-color: #7c3aed;
+}
+
+.jogo-card-imagem {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #09090b;
+}
+
+.jogo-card-imagem img {
+  object-fit: cover;
+}
+
+.jogo-card-info {
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.jogo-card-info h3 {
+  font-size: 1rem;
+  color: #f4f4f5;
+}
+
+.jogo-card-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #a1a1aa;
+}
+
+.jogo-card-generos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.jogo-card-tag {
+  background: #27272a;
+  color: #d4d4d8;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}
