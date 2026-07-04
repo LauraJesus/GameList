@@ -1,5 +1,10 @@
+"use client";
+
 import { Jogo } from "@/tipos/jogo";
+import { adicionarWishlist } from "@/services/wishlist.services";
 import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
 import "@/componentes/JogoCard/JogoCard.css";
 
 interface JogoCardProps {
@@ -7,6 +12,26 @@ interface JogoCardProps {
 }
 
 export default function JogoCard({ jogo }: JogoCardProps) {
+  const [adicionando, setAdicionando] = useState(false);
+
+  async function handleAdicionarWishlist() {
+    setAdicionando(true);
+    try {
+      await adicionarWishlist({
+        jogoId: jogo.id,
+        jogoNome: jogo.name,
+        jogoImagem: jogo.background_image,
+      });
+      toast.success(`${jogo.name} adicionado à wishlist`);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Erro ao adicionar à wishlist"
+      );
+    } finally {
+      setAdicionando(false);
+    }
+  }
+
   return (
     <div className="jogo-card">
       <div className="jogo-card-imagem">
@@ -37,6 +62,14 @@ export default function JogoCard({ jogo }: JogoCardProps) {
             </span>
           ))}
         </div>
+
+        <button
+          className="jogo-card-botao-wishlist"
+          onClick={handleAdicionarWishlist}
+          disabled={adicionando}
+        >
+          {adicionando ? "Adicionando..." : "+ Wishlist"}
+        </button>
       </div>
     </div>
   );

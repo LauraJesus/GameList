@@ -53,3 +53,24 @@
   padding: 0.2rem 0.5rem;
   border-radius: 999px;
 }
+
+.jogo-card-botao-wishlist {
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.jogo-card-botao-wishlist:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.jogo-card-botao-wishlist:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
