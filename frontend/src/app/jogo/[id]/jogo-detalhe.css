@@ -1,0 +1,112 @@
+.jogo-nao-encontrado {
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 2rem;
+  text-align: center;
+  color: #f4f4f5;
+}
+
+.jogo-nao-encontrado h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.jogo-nao-encontrado p {
+  color: #a1a1aa;
+  margin-bottom: 1.5rem;
+}
+
+.jogo-nao-encontrado a {
+  color: #a78bfa;
+  text-decoration: none;
+}
+
+.jogo-detalhe {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.jogo-detalhe-voltar {
+  display: inline-block;
+  color: #a1a1aa;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+}
+
+.jogo-detalhe-voltar:hover {
+  color: #f4f4f5;
+}
+
+.jogo-detalhe-topo {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.jogo-detalhe-imagem {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #09090b;
+  flex-shrink: 0;
+}
+
+.jogo-detalhe-imagem img {
+  object-fit: cover;
+}
+
+.jogo-detalhe-info {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.jogo-detalhe-info h1 {
+  font-size: 1.75rem;
+  color: #f4f4f5;
+}
+
+.jogo-detalhe-meta {
+  display: flex;
+  gap: 1rem;
+  color: #a1a1aa;
+  font-size: 0.9rem;
+}
+
+.jogo-detalhe-generos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.jogo-detalhe-tag {
+  background: #27272a;
+  color: #d4d4d8;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+}
+
+.jogo-detalhe-info .botao-wishlist {
+  align-self: flex-start;
+  margin: 0.5rem 0;
+}
+
+.jogo-detalhe-descricao {
+  color: #d4d4d8;
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.jogo-detalhe-avaliacoes h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: #f4f4f5;
+}
