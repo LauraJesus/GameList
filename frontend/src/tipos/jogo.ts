@@ -7,6 +7,11 @@ export interface Jogo {
   genres: { id: number; name: string }[];
 }
 
+export interface JogoDetalhado extends Jogo {
+  description_raw: string;
+  metacritic: number | null;
+}
+
 export interface Genero {
   id: number;
   name: string;

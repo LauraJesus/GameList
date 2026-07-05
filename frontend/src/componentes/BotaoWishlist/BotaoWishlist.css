@@ -1,0 +1,19 @@
+.botao-wishlist {
+  padding: 0.5rem 1rem;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.botao-wishlist:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.botao-wishlist:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

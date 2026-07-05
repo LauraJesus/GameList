@@ -1,5 +1,5 @@
 import { ItemWishlist, NovoItemWishlist } from "@/tipos/wishlist";
-
+import { obterSessao } from "@/services/session.services";
 
 const CHAVE_STORAGE = "gamelist_wishlist_mock";
 
@@ -13,18 +13,14 @@ function salvarStorage(itens: ItemWishlist[]) {
   localStorage.setItem(CHAVE_STORAGE, JSON.stringify(itens));
 }
 
-async function estaLogado(): Promise<boolean> {
-  const res = await fetch("/api/auth/status");
-  const dados = await res.json();
-  return dados.logado;
-}
-
 export async function adicionarWishlist(
   jogo: NovoItemWishlist
 ): Promise<ItemWishlist> {
-  if (!(await estaLogado())) {
+  const sessao = await obterSessao();
+  if (!sessao.logado) {
     throw new Error("Faça login para adicionar à wishlist");
   }
+
   const itens = lerStorage();
 
   const jaExiste = itens.some((item) => item.jogoId === jogo.jogoId);
