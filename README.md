@@ -105,6 +105,7 @@ A chave da RAWG é gratuita e pode ser gerada em [rawg.io/apidocs](https://rawg.
 
 ## Integrantes
 
-| Nome | GitHub |
+| Nome | GitHub|
 |---|---|
 | Laura Jesus | [@LauraJesus](https://github.com/LauraJesus) |
+| Bianca Salvador |  |
