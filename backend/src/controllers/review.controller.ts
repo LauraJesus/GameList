@@ -46,6 +46,25 @@ export class ReviewController {
         }
     }
 
+    // NOVO: rota pública, sem token — qualquer pessoa pode ver as avaliações de um jogo
+    async listarPorJogo(req: Request, res: Response) {
+        try {
+            const jogoId = Number(req.params.jogoId);
+
+            const reviews = await reviewService.listarPorJogo(jogoId);
+
+            res.json(reviews);
+
+        } catch (error) {
+            res.status(500).json({
+                message:
+                error instanceof Error
+                ? error.message
+                : "Erro ao listar avaliações do jogo",
+            });
+        }
+    }
+
     async atualizar(req: Request, res: Response) {
         try {
             const payload = res.locals.token as AuthPayload;

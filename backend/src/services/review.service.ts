@@ -24,6 +24,32 @@ export class ReviewService {
         });
     }
 
+    // NOVO: lista todas as avaliações de um jogo específico, de TODOS os usuários.
+    // Diferente do listar() de cima, que só traz as avaliações de quem está logado.
+    async listarPorJogo(jogoId: number) {
+        const reviews = await prisma.review.findMany({
+            where: { jogoId },
+            orderBy: { criadoEm: "desc" },
+            include: {
+                usuario: {
+                    select: { nome: true }, // nunca inclua a senha aqui
+                },
+            },
+        });
+
+        // achata o formato pra ficar { ...review, usuarioNome } em vez de
+        // { ...review, usuario: { nome } }, mais simples de consumir no front
+        return reviews.map((review) => ({
+            id: review.id,
+            jogoId: review.jogoId,
+            jogoNome: review.jogoNome,
+            nota: review.nota,
+            comentario: review.comentario,
+            criadoEm: review.criadoEm,
+            usuarioNome: review.usuario.nome,
+        }));
+    }
+
     async atualizar(usuarioId: number, reviewId: number, nota: number, comentario: string) {
         const review = await prisma.review.findUnique({
             where: { id: reviewId }
