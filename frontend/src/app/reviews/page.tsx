@@ -25,9 +25,9 @@ export default function ReviewsPage() {
     setCarregando(false);
   }
 
-  async function handleRemover(jogoId: number, jogoNome: string) {
+  async function handleRemover(reviewId: number, jogoNome: string) {
     try {
-      await removerAvaliacao(jogoId);
+      await removerAvaliacao(reviewId);
       toast.success(`Avaliação de ${jogoNome} removida`);
       carregarAvaliacoes();
     } catch (err) {
@@ -69,9 +69,7 @@ export default function ReviewsPage() {
                 {new Date(avaliacao.criadoEm).toLocaleDateString("pt-BR")}
               </span>
               <button
-                onClick={() =>
-                  handleRemover(avaliacao.jogoId, avaliacao.jogoNome)
-                }
+                onClick={() => handleRemover(avaliacao.id, avaliacao.jogoNome)}
               >
                 Remover
               </button>

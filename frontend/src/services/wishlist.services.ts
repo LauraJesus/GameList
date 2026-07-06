@@ -1,17 +1,7 @@
 import { ItemWishlist, NovoItemWishlist } from "@/tipos/wishlist";
 import { obterSessao } from "@/services/session.services";
 
-const CHAVE_STORAGE = "gamelist_wishlist_mock";
-
-function lerStorage(): ItemWishlist[] {
-  if (typeof window === "undefined") return [];
-  const dados = localStorage.getItem(CHAVE_STORAGE);
-  return dados ? JSON.parse(dados) : [];
-}
-
-function salvarStorage(itens: ItemWishlist[]) {
-  localStorage.setItem(CHAVE_STORAGE, JSON.stringify(itens));
-}
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function adicionarWishlist(
   jogo: NovoItemWishlist
@@ -21,28 +11,43 @@ export async function adicionarWishlist(
     throw new Error("Faça login para adicionar à wishlist");
   }
 
-  const itens = lerStorage();
+  const response = await fetch(`${API_URL}/wishlist`, {
+    method: "POST",
+    credentials: "include", // envia o cookie httpOnly pro backend
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(jogo),
+  });
 
-  const jaExiste = itens.some((item) => item.jogoId === jogo.jogoId);
-  if (jaExiste) {
-    throw new Error("Esse jogo já está na sua wishlist");
+  const dados = await response.json();
+
+  if (!response.ok) {
+    throw new Error(dados.message ?? "Erro ao adicionar à wishlist");
   }
 
-  const novoItem: ItemWishlist = {
-    id: Date.now(),
-    ...jogo,
-    criadoEm: new Date().toISOString(),
-  };
-
-  salvarStorage([...itens, novoItem]);
-  return novoItem;
+  return dados;
 }
 
 export async function listarWishlist(): Promise<ItemWishlist[]> {
-  return lerStorage();
+  const response = await fetch(`${API_URL}/wishlist`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    return []; 
+  }
+
+  return response.json();
 }
 
-export async function removerWishlist(jogoId: number): Promise<void> {
-  const itens = lerStorage();
-  salvarStorage(itens.filter((item) => item.jogoId !== jogoId));
+
+export async function removerWishlist(itemId: number): Promise<void> {
+  const response = await fetch(`${API_URL}/wishlist/${itemId}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const dados = await response.json();
+    throw new Error(dados.message ?? "Erro ao remover da wishlist");
+  }
 }

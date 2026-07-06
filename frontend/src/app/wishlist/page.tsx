@@ -22,10 +22,16 @@ export default function WishlistPage() {
     setCarregando(false);
   }
 
-  async function handleRemover(jogoId: number, jogoNome: string) {
-    await removerWishlist(jogoId);
-    toast.success(`${jogoNome} removido da wishlist`);
-    carregarItens();
+  async function handleRemover(itemId: number, jogoNome: string) {
+    try {
+      await removerWishlist(itemId);
+      toast.success(`${jogoNome} removido da wishlist`);
+      carregarItens();
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Erro ao remover da wishlist"
+      );
+    }
   }
 
   return (
@@ -56,7 +62,7 @@ export default function WishlistPage() {
             <span className="wishlist-item-nome">{item.jogoNome}</span>
             <button
               className="wishlist-item-remover"
-              onClick={() => handleRemover(item.jogoId, item.jogoNome)}
+              onClick={() => handleRemover(item.id, item.jogoNome)}
             >
               Remover
             </button>

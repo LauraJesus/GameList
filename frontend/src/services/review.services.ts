@@ -1,103 +1,87 @@
 import { Avaliacao, NovaAvaliacao } from "@/tipos/review";
 import { obterSessao } from "@/services/session.services";
 
-const CHAVE_STORAGE = "gamelist_reviews_mock";
-
-function lerStorage(): Avaliacao[] {
-  if (typeof window === "undefined") return [];
-  const dados = localStorage.getItem(CHAVE_STORAGE);
-  return dados ? JSON.parse(dados) : [];
-}
-
-function salvarStorage(avaliacoes: Avaliacao[]) {
-  localStorage.setItem(CHAVE_STORAGE, JSON.stringify(avaliacoes));
-}
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function criarAvaliacao(
   dados: NovaAvaliacao
 ): Promise<Avaliacao> {
   const sessao = await obterSessao();
-  if (!sessao.logado || !sessao.usuario) {
+  if (!sessao.logado) {
     throw new Error("Faça login para avaliar este jogo");
   }
 
-  const avaliacoes = lerStorage();
+  
+  const existente = await buscarMinhaAvaliacao(dados.jogoId);
 
-  const existente = avaliacoes.find(
-    (a) => a.jogoId === dados.jogoId && a.usuarioNome === sessao.usuario!.nome
-  );
+  const response = existente
+    ? await fetch(`${API_URL}/reviews/${existente.id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nota: dados.nota,
+          comentario: dados.comentario,
+        }),
+      })
+    : await fetch(`${API_URL}/reviews`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados),
+      });
 
-  const novaAvaliacao: Avaliacao = {
-    id: existente?.id ?? Date.now(),
-    jogoId: dados.jogoId,
-    jogoNome: dados.jogoNome,
-    nota: dados.nota,
-    comentario: dados.comentario || null,
-    criadoEm: existente?.criadoEm ?? new Date().toISOString(),
-    usuarioNome: sessao.usuario.nome,
-  };
+  const resultado = await response.json();
 
-  const outras = avaliacoes.filter(
-    (a) => !(a.jogoId === dados.jogoId && a.usuarioNome === sessao.usuario!.nome)
-  );
+  if (!response.ok) {
+    throw new Error(resultado.message ?? "Erro ao salvar avaliação");
+  }
 
-  salvarStorage([...outras, novaAvaliacao]);
-  return novaAvaliacao;
+  return resultado;
 }
+
 
 export async function listarAvaliacoesPorJogo(
   jogoId: number
 ): Promise<Avaliacao[]> {
-  const avaliacoes = lerStorage();
-  return avaliacoes
-    .filter((a) => a.jogoId === jogoId)
-    .sort(
-      (a, b) => new Date(b.criadoEm).getTime() - new Date(a.criadoEm).getTime()
-    );
-}
+  const response = await fetch(`${API_URL}/reviews/jogo/${jogoId}`);
 
-export async function listarMinhasAvaliacoes(): Promise<Avaliacao[]> {
-  const sessao = await obterSessao();
-  if (!sessao.logado || !sessao.usuario) {
+  if (!response.ok) {
     return [];
   }
 
-  const avaliacoes = lerStorage();
-  return avaliacoes
-    .filter((a) => a.usuarioNome === sessao.usuario!.nome)
-    .sort(
-      (a, b) => new Date(b.criadoEm).getTime() - new Date(a.criadoEm).getTime()
-    );
+  return response.json();
 }
 
-export async function removerAvaliacao(jogoId: number): Promise<void> {
-  const sessao = await obterSessao();
-  if (!sessao.logado || !sessao.usuario) {
-    throw new Error("Faça login para remover uma avaliação");
+export async function listarMinhasAvaliacoes(): Promise<Avaliacao[]> {
+  const response = await fetch(`${API_URL}/reviews`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    return [];
   }
 
-  const avaliacoes = lerStorage();
-  salvarStorage(
-    avaliacoes.filter(
-      (a) => !(a.jogoId === jogoId && a.usuarioNome === sessao.usuario!.nome)
-    )
-  );
+  return response.json();
 }
 
-// NOVO: busca a avaliação que a PESSOA LOGADA já fez pra esse jogo,
-// se existir. Usado pra pré-preencher o formulário em vez de abrir em branco.
+
+export async function removerAvaliacao(reviewId: number): Promise<void> {
+  const response = await fetch(`${API_URL}/reviews/${reviewId}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const dados = await response.json();
+    throw new Error(dados.message ?? "Erro ao remover avaliação");
+  }
+}
+
+
 export async function buscarMinhaAvaliacao(
   jogoId: number
 ): Promise<Avaliacao | null> {
-  const sessao = await obterSessao();
-  if (!sessao.logado || !sessao.usuario) {
-    return null;
-  }
-
-  const avaliacoes = lerStorage();
-  const minha = avaliacoes.find(
-    (a) => a.jogoId === jogoId && a.usuarioNome === sessao.usuario!.nome
-  );
-
-  return minha ?? null;
+  const minhas = await listarMinhasAvaliacoes();
+  return minhas.find((a) => a.jogoId === jogoId) ?? null;
 }
