@@ -16,7 +16,7 @@ export function authMiddleware(req :Request, res: Response, next: NextFunction) 
         AuthPayload // Verifica se o token é válido e decodifica o payload
 
         res.locals.token = payload; // Armazena o payload do token no objeto res.locals para ser usado em outros middlewares ou rotas
-        //id do usuário, email e username do usuário logado
+        //id do usuário, email e nome do usuário logado
         next(); //segue a requisição para o próximo middleware ou rota
     
     }catch(error){
