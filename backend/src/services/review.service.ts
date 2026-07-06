@@ -24,21 +24,19 @@ export class ReviewService {
         });
     }
 
-    // NOVO: lista todas as avaliações de um jogo específico, de TODOS os usuários.
-    // Diferente do listar() de cima, que só traz as avaliações de quem está logado.
+   
     async listarPorJogo(jogoId: number) {
         const reviews = await prisma.review.findMany({
             where: { jogoId },
             orderBy: { criadoEm: "desc" },
             include: {
                 usuario: {
-                    select: { nome: true }, // nunca inclua a senha aqui
+                    select: { nome: true }, 
                 },
             },
         });
 
-        // achata o formato pra ficar { ...review, usuarioNome } em vez de
-        // { ...review, usuario: { nome } }, mais simples de consumir no front
+    
         return reviews.map((review) => ({
             id: review.id,
             jogoId: review.jogoId,

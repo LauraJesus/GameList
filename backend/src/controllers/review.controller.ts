@@ -46,7 +46,7 @@ export class ReviewController {
         }
     }
 
-    // NOVO: rota pública, sem token — qualquer pessoa pode ver as avaliações de um jogo
+    
     async listarPorJogo(req: Request, res: Response) {
         try {
             const jogoId = Number(req.params.jogoId);
